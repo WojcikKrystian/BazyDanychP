@@ -1,0 +1,17 @@
+ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `krys19_p4oj3ktdb`.`Klienci`(`ID_Klienta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `krys19_p4oj3ktdb`.`Konie`(`ID_Konia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `krys19_p4oj3ktdb`.`Pracownicy`(`ID_Pracownika`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `krys19_p4oj3ktdb`.`Płatności`(`ID_Platnosci`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `krys19_p4oj3ktdb`.`Klienci`(`ID_Klienta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `krys19_p4oj3ktdb`.`Konie`(`ID_Konia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `krys19_p4oj3ktdb`.`Pracownicy`(`ID_Pracownika`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `krys19_p4oj3ktdb`.`Płatności`(`ID_Platnosci`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+Zapytania
+1. Wyświetl wszystkich klientów
+SELECT * FROM Klienci;
+2. Wyświetl wszystkie nazwy konie
+SELECT Nazwa FROM Konie;
+3. Wyświetl Imię i Nazwisko Klientów którzy posiadają konia w stajni. 
+SELECT `Klienci.Imie`, `Klienci.Nazwisko` FROM `Klienci` INNER JOIN `Rezerwacje` ON `Klienci.ID_Klienta`=`Rezerwacje.ID_Klienta` WHERE `ID_Konia` IS NOT NULL

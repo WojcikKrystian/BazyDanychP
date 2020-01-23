@@ -1,0 +1,6 @@
+Adres: mysql.turbohost.pl
+
+Baza danych:	krys19_p4oj3ktdb
+Host:	172.16.0.149
+Użytkownik:	krys19_k2st1an
+Hasło:	0tEXt1RlFT8t
