@@ -15,3 +15,4 @@ SELECT * FROM Klienci;
 SELECT Nazwa FROM Konie;
 3. Wyświetl Imię i Nazwisko Klientów którzy posiadają konia w stajni. 
 SELECT `Klienci.Imie`, `Klienci.Nazwisko` FROM `Klienci` INNER JOIN `Rezerwacje` ON `Klienci.ID_Klienta`=`Rezerwacje.ID_Klienta` WHERE `ID_Konia` IS NOT NULL
+4.
