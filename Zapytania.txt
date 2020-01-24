@@ -1,18 +1,76 @@
-ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `krys19_p4oj3ktdb`.`Klienci`(`ID_Klienta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `krys19_p4oj3ktdb`.`Konie`(`ID_Konia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `krys19_p4oj3ktdb`.`Pracownicy`(`ID_Pracownika`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Rezerwacje` ADD CONSTRAINT `Rez_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `krys19_p4oj3ktdb`.`Płatności`(`ID_Platnosci`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+1. Wyświetlanie Danych osobowych klientów oraz ilości posiadanych przez nich koni w Rezerwacji. 
 
-ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `krys19_p4oj3ktdb`.`Klienci`(`ID_Klienta`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `krys19_p4oj3ktdb`.`Konie`(`ID_Konia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `krys19_p4oj3ktdb`.`Pracownicy`(`ID_Pracownika`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `Usługi` ADD CONSTRAINT `Usl_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `krys19_p4oj3ktdb`.`Płatności`(`ID_Platnosci`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+Select K.Imie, K.Nazwisko, count(R.ID_Rezerwacji) as Ilosc_koni 
+from Klienci K inner join Rezerwacje R on K.ID_Klienta=R.ID_Klienta 
+GROUP BY R.ID_Klienta;
 
-Zapytania
-1. Wyświetl wszystkich klientów
-SELECT * FROM Klienci;
-2. Wyświetl wszystkie nazwy konie
-SELECT Nazwa FROM Konie;
-3. Wyświetl Imię i Nazwisko Klientów którzy posiadają konia w stajni. 
-SELECT `Klienci.Imie`, `Klienci.Nazwisko` FROM `Klienci` INNER JOIN `Rezerwacje` ON `Klienci.ID_Klienta`=`Rezerwacje.ID_Klienta` WHERE `ID_Konia` IS NOT NULL
-4.
+2. Wyświetlanie wszystkich zarejestrowanych Usług przypisanych do danego Klienta. Zapytanie wyświetla Imię oraz nazwisko Klienta, Dane osobowe przypisanego do zlecenia pracownika, Tytuł zlecenia oraz termin wykonania usługi posortowany od najwcześniejszego.
+
+Select K.Imie as Kli_Imie, K.Nazwisko as Kli_Nazwisko, P.Tytul, Pra.Imie as Pra_Imie, Pra.Nazwisko as Pra_Nazwisko, U.Data_uslugi from Usługi U 
+Inner join Płatności P on P.ID_Platnosci=U.ID_Platnosci 
+Inner join Klienci K on K.ID_Klienta=U.ID_Klienta 
+Inner join Pracownicy Pra on Pra.ID_Pracownika=U.ID_Pracownika 
+Order by Data_uslugi;
+
+3. Wyświetlanie informacji o zakupionych przez klientów usługach oraz ich kwocie.
+Zapytanie wyświetla Dane osobowe klienta, Tytuł wykupionej usługi oraz kwotę należną do zapłaty.
+
+Select K.Imie as Kli_Imie, K.Nazwisko as Kli_Nazwisko, P.Tytul, P.Kwota from Usługi U 
+Inner join Płatności P on P.ID_Platnosci=U.ID_Platnosci 
+Inner join Klienci K on K.ID_Klienta=U.ID_Klienta 
+Order by K.Imie;
+
+4. Zmodyfikowane poprzednie zapytanie, sumujące totalną kwotę którą klient ma uiścić do Klubu za wszystkie wykupione usługi. Zapytanie wyświetla Dane osobowe klientów oraz zsumowane należności, posegregowane od największej.
+
+Select K.Imie as Kli_Imie, K.Nazwisko as Kli_Nazwisko, sum(P.Kwota) as Należności from Usługi U 
+Inner join Płatności P on P.ID_Platnosci=U.ID_Platnosci 
+Inner join Klienci K on K.ID_Klienta=U.ID_Klienta 
+Group by K.Imie
+Order by Należności desc;
+
+5. Wyświetlanie informacji o Kliencie, Tytule zleconej usługi oraz dacie wykonania przypisanej do konkretnego pracownika, posortowane nazwiskami.
+Zapytanie wyświetla Dane osobowe Pracowników oraz Klientów, Tytuł realizacji oraz termin jej wykonania.
+
+Select Pra.Imie as Pra_Imie, Pra.Nazwisko as Pra_Nazwisko, K.Imie as Kli_Imie, K.Nazwisko as Kli_Nazwisko, P.Tytul, U.Data_uslugi from Usługi U 
+Inner join Płatności P on P.ID_Platnosci=U.ID_Platnosci 
+Inner join Klienci K on K.ID_Klienta=U.ID_Klienta 
+Inner join Pracownicy Pra on Pra.ID_Pracownika=U.ID_Pracownika
+order by Pra_Nazwisko;
+
+6. Procedura pozwalająca dodawać Pracowników do bazy danych.
+
+CREATE PROCEDURE `DodajPracownika`(IN `ID_Pracownika` INT(11), IN `Imie` VARCHAR(50), IN `Nazwisko` VARCHAR(50), IN `Email` VARCHAR(60), IN `Telefon` VARCHAR(11), IN `Ulica` VARCHAR(60), IN `Miejscowosc` VARCHAR(60), IN `Kod_pocztowy` VARCHAR(11)) 
+NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER 
+BEGIN 
+insert into Pracownicy values(ID_Pracownika, Imie, Nazwisko, Email, Telefon, Ulica, Miejscowosc, Kod_pocztowy); 
+END;
+
+6a. Wywołanie utworzonej procedury DodajPracownika
+
+Sposób 1.
+SET @p0='6'; SET @p1='Józiu'; SET @p2='Mączka'; SET @p3='j.maczka@stajnia.pl'; SET @p4='233 434 123'; SET @p5='Poznańska 23'; SET @p6='Rzeszów'; SET @p7='35-001'; CALL `DodajPracownika`(@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+
+Sposób 2 (optymalny).
+
+call DodajPracownika('6','Józiu’, ‘Mączka’, ‘j.maczka@stajnia.pl’, ‘233 434 123’, ‘Poznańska 23’, ‘Rzeszów’, ‘35-001’);
+
+7. Procedura pozwalająca usuwać Pracowników z bazy danych na podstawie wybranego ID.
+
+CREATE PROCEDURE `UsunPracownika`(IN `ID_Pracownika` INT) NOT DETERMINISTIC NO SQL SQL SECURITY DEFINER BEGIN delete from Pracownicy where Pracownicy.ID_Pracownika=ID_Pracownika; END;
+
+7a. Wywołanie utworzonej procedury UsunPracownika
+
+call UsunPracownika (6);
+
+8. Procedura pozwalająca aktualizować tabelę Usługi wybierając ID usługi.
+
+CREATE PROCEDURE `AktualizacjaUslugi`(IN `Id_Uslugi` INT(11), IN `Data_uslugi` DATE, IN `ID_Konia` INT(11), IN `ID_Klienta` INT(11), IN `ID_Pracownika` INT(11), IN `ID_Platnosci` INT(11))
+ NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
+ BEGIN 
+update Usługi SET 
+Usługi.Data_uslugi=Data_Uslugi, 
+Usługi.ID_Konia=ID_Konia, 
+Usługi.ID_Klienta=ID_Klienta, 
+Usługi.ID_Pracownika=ID_Pracownika, 
+Usługi.ID_Platnosci=ID_Platnosci 
+where Usługi.ID_Usługi=Id_Uslugi; end;
