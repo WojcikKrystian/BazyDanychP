@@ -1,0 +1,344 @@
+-- phpMyAdmin SQL Dump
+-- version 4.4.2
+-- http://www.phpmyadmin.net
+--
+-- Host: 172.16.0.149
+-- Czas generowania: 24 Sty 2020, 20:59
+-- Wersja serwera: 5.6.45-log
+-- Wersja PHP: 5.5.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Baza danych: `krys19_p4oj3ktdb`
+--
+
+DELIMITER $$
+--
+-- Procedury
+--
+CREATE DEFINER=`krys19_k2st1an`@`%` PROCEDURE `AktualizacjaUslugi`(IN `Id_Uslugi` INT(11), IN `Data_uslugi` DATE, IN `ID_Konia` INT(11), IN `ID_Klienta` INT(11), IN `ID_Pracownika` INT(11), IN `ID_Platnosci` INT(11))
+BEGIN
+update Usługi SET
+Usługi.Data_uslugi=Data_Uslugi,
+Usługi.ID_Konia=ID_Konia,
+Usługi.ID_Klienta=ID_Klienta,
+Usługi.ID_Pracownika=ID_Pracownika,
+Usługi.ID_Platnosci=ID_Platnosci
+where Usługi.ID_Usługi=Id_Uslugi;
+end$$
+
+CREATE DEFINER=`krys19_k2st1an`@`%` PROCEDURE `DodajPracownika`(IN `ID_Pracownika` INT(11), IN `Imie` VARCHAR(50), IN `Nazwisko` VARCHAR(50), IN `Email` VARCHAR(60), IN `Telefon` VARCHAR(11), IN `Ulica` VARCHAR(60), IN `Miejscowosc` VARCHAR(60), IN `Kod_pocztowy` VARCHAR(11))
+BEGIN 
+insert into Pracownicy values(ID_Pracownika, Imie, Nazwisko, Email, Telefon, Ulica, Miejscowosc, Kod_pocztowy);
+END$$
+
+CREATE DEFINER=`krys19_k2st1an`@`%` PROCEDURE `UsunPracownika`(IN `ID_Pracownika` INT)
+    NO SQL
+BEGIN
+delete from Pracownicy where Pracownicy.ID_Pracownika=ID_Pracownika;
+END$$
+
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Klienci`
+--
+
+CREATE TABLE `Klienci` (
+  `ID_Klienta` int(11) NOT NULL,
+  `Imie` varchar(50) NOT NULL,
+  `Nazwisko` varchar(50) NOT NULL,
+  `Email` varchar(60) NOT NULL,
+  `Telefon` varchar(11) NOT NULL,
+  `Ulica` varchar(60) NOT NULL,
+  `Miejscowosc` varchar(60) NOT NULL,
+  `Kod_pocztowy` varchar(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Klienci`
+--
+
+INSERT INTO `Klienci` (`ID_Klienta`, `Imie`, `Nazwisko`, `Email`, `Telefon`, `Ulica`, `Miejscowosc`, `Kod_pocztowy`) VALUES
+(1, 'Krystian', 'Wójcik', 'krystian@wojcik.pl', '111 222 333', 'Krakowska 1', 'Rzeszow', '35-021'),
+(2, 'Marek', 'Dąb', 'marek@dab.pl', '222 333 444', 'Default 5/2a', 'Rzeszow', '32-113'),
+(3, 'Bartosz', 'Palec', 'bartosz@palec.pl', '333 444 555', 'Podkarpacka 1', 'Tarnow', '35-100'),
+(4, 'Monika', 'Grudziac', 'monika@grudziac.pl', '444 555 666', 'Krakowska 6', 'Warszawa', '00-203'),
+(5, 'Marzena', 'Borowiec', 'marzena@borowiec.pl', '231 321 123', 'Lwowska 6', 'Warszawa', '00-203'),
+(6, 'Zbigniew', 'Gorzelec', 'zbigniew@gorzelec.pl', '524 123 312', 'Podkarpacka 53', 'Rzeszow', '35-021'),
+(7, 'Marcin', 'Pietryka', 'marcin@pietryka.pl', '242 432 432', 'Langiewicza 7', 'Tarnow', '35-100'),
+(8, 'Grzegorz', 'Rutka', 'grzegorz@rutka.pl', '43-12-23-12', '3 Maja 23', 'Rzeszow', '32-113'),
+(9, 'Barbara', 'Kwiecien', 'barbara@kwiecien.pl', '625 234 243', 'Starowiejska 6', 'Rzeszow', '35-021'),
+(10, 'Zosia', 'Wojtan', 'zosia@wojtan.pl', '351 231 563', 'Mickiewicza 52', 'Poznan', '62-423'),
+(11, 'Mariusz', 'Wojna', 'mariusz@wojna.pl', '534 342 234', 'Lwowska 32', 'Rzeszow', '35-083'),
+(12, 'Klaudia', 'Koza', 'klaudia@koza.pl', '522 123 356', 'Krakowska 50', 'Rzeszow', '35-088'),
+(13, 'Mikołaj', 'Kopernik', 'mikolaj@kopernik', '683 234 623', 'Narutowicza 53', 'Tarnow', '33-100');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Konie`
+--
+
+CREATE TABLE `Konie` (
+  `ID_Konia` int(11) NOT NULL,
+  `Nazwa` varchar(60) NOT NULL,
+  `Wiek` int(11) NOT NULL,
+  `Rasa` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Konie`
+--
+
+INSERT INTO `Konie` (`ID_Konia`, `Nazwa`, `Wiek`, `Rasa`) VALUES
+(1, 'Siwek', 15, 'Arab'),
+(2, 'Mustuk', 10, 'Mustang'),
+(3, 'Bestia', 20, 'Shire'),
+(4, 'Kohana', 5, 'Hucuł'),
+(5, 'Dalido', 12, 'Hucuł'),
+(6, 'Leja', 11, 'Mustang'),
+(7, 'Bjuti', 15, 'Quarter'),
+(8, 'Staruszek', 22, 'Shire'),
+(9, 'Blyskawica', 7, 'Mustang'),
+(10, 'Piorun', 12, 'Quarter'),
+(11, 'Monsterek', 14, 'Shire'),
+(12, 'Gryzak', 6, 'Hucuł'),
+(13, 'Wataha', 17, 'Arab'),
+(14, 'Lantana', 12, 'Shire'),
+(15, 'Pędziwiatr', 11, 'Quarter'),
+(16, 'Szymi', 13, 'Quarter'),
+(17, 'Speed', 11, 'Arab'),
+(18, 'Grzebyk', 20, 'Mustang'),
+(19, 'Huncwot', 12, 'Arab'),
+(20, 'Młodziutka', 17, 'Quarter'),
+(21, 'Quebonifacy', 7, 'Hucuł'),
+(22, 'Szpak', 3, 'Hucuł');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Pracownicy`
+--
+
+CREATE TABLE `Pracownicy` (
+  `ID_Pracownika` int(11) NOT NULL,
+  `Imie` varchar(50) NOT NULL,
+  `Nazwisko` varchar(50) NOT NULL,
+  `Email` varchar(60) NOT NULL,
+  `Telefon` varchar(11) NOT NULL,
+  `Ulica` varchar(60) NOT NULL,
+  `Miejscowosc` varchar(60) NOT NULL,
+  `Kod_pocztowy` varchar(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Pracownicy`
+--
+
+INSERT INTO `Pracownicy` (`ID_Pracownika`, `Imie`, `Nazwisko`, `Email`, `Telefon`, `Ulica`, `Miejscowosc`, `Kod_pocztowy`) VALUES
+(1, 'Zbyszek', 'Majdon', 'z.majdon@stajnia.pl', '233 243 243', 'Ksiezycowa 6a', 'Rzeszow', '35-021'),
+(2, 'Tomasz', 'Dzialka', 't.dzialka@stajnia.pl', '233 234 235', 'Podkarpacka 46', 'Rzeszow', '35-022'),
+(3, 'Piotr', 'Gomułka', 'p.gomulka@stajnia.pl', '233 233 233', 'Podkarpacka 47', 'Rzeszow', '35-021'),
+(4, 'Jacek', 'Ciesielski', 'j.ciesielski@stajnia.pl', '233 423 332', 'Langiewicza 14', 'Rzeszow', '35-072'),
+(5, 'Iwona', 'Radkiewicz', 'i.radkiewicz@stajnia.pl', '233 434 444', 'Krakowska 21', 'Tarnow', '33-100');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Płatności`
+--
+
+CREATE TABLE `Płatności` (
+  `ID_Platnosci` int(11) NOT NULL,
+  `Tytul` varchar(120) NOT NULL,
+  `Opis` varchar(255) NOT NULL,
+  `Kwota` double NOT NULL,
+  `Czas_wykonywania` int(11) NOT NULL COMMENT 'W minutach'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Płatności`
+--
+
+INSERT INTO `Płatności` (`ID_Platnosci`, `Tytul`, `Opis`, `Kwota`, `Czas_wykonywania`) VALUES
+(1, 'Rezerwacja konia', 'Platnosc za usluge rezerwacji konia na okres czasu 30 dni', 750, 0),
+(2, 'Godzinna jazda', 'Platnosc za usluge umozliwaiajaca godzinna jazde na koniu', 60, 60),
+(3, 'Czyszczenie konia', 'Czyszczenie i mycie konia', 50, 15),
+(4, 'Spacer z koniem', 'Oplata za spacer po stajni z koniem', 45, 45),
+(5, 'Wyjazd w teren', 'Oplata za wyjazd z koniem w teren', 95, 90),
+(6, 'Bryczka', 'Przejazd bryczką konną', 200, 30),
+(7, 'Hipoterapia', 'Relaksująca, lecznicza jazda konna', 70, 45),
+(8, 'Sesja zdjęciowa', 'Sesja zdjęciowa z wybranym koniem', 90, 60);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Rezerwacje`
+--
+
+CREATE TABLE `Rezerwacje` (
+  `ID_Rezerwacji` int(11) NOT NULL,
+  `Data_poczatku` date NOT NULL,
+  `Data_konca` date NOT NULL,
+  `Numer_boksu` int(11) NOT NULL,
+  `ID_Konia` int(11) NOT NULL,
+  `ID_Klienta` int(11) NOT NULL,
+  `ID_Pracownika` int(11) NOT NULL,
+  `ID_Platnosci` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Rezerwacje`
+--
+
+INSERT INTO `Rezerwacje` (`ID_Rezerwacji`, `Data_poczatku`, `Data_konca`, `Numer_boksu`, `ID_Konia`, `ID_Klienta`, `ID_Pracownika`, `ID_Platnosci`) VALUES
+(1, '2020-01-01', '2020-02-01', 2, 1, 2, 1, 1),
+(2, '2020-01-10', '2020-06-10', 5, 2, 1, 2, 1),
+(3, '2019-12-20', '2020-01-20', 1, 6, 3, 1, 1),
+(4, '2020-01-01', '2021-01-01', 3, 5, 3, 2, 1),
+(5, '2020-01-01', '2022-01-01', 4, 3, 4, 3, 1),
+(6, '2019-04-01', '2022-01-18', 6, 4, 6, 1, 1),
+(7, '2019-04-01', '2020-07-14', 9, 10, 10, 5, 1),
+(8, '2020-04-22', '2020-07-22', 12, 12, 11, 4, 1),
+(9, '2020-04-22', '2020-07-22', 12, 13, 11, 4, 1),
+(10, '2020-03-01', '2020-09-01', 8, 9, 7, 5, 1),
+(11, '2019-01-05', '2020-08-05', 7, 7, 13, 4, 1),
+(12, '2020-03-14', '2021-02-14', 9, 8, 11, 5, 1),
+(13, '2020-05-21', '2024-01-21', 30, 11, 10, 3, 1),
+(14, '2020-07-28', '2022-06-28', 16, 14, 8, 2, 1),
+(15, '2019-09-11', '2022-04-11', 18, 18, 6, 1, 1),
+(16, '2020-11-16', '2021-02-16', 18, 16, 4, 1, 1),
+(17, '2020-02-02', '2021-06-02', 13, 15, 3, 2, 1),
+(18, '2019-04-04', '2020-11-04', 14, 17, 1, 4, 1),
+(19, '2020-06-09', '2030-12-09', 21, 20, 9, 3, 1),
+(20, '2019-08-19', '2021-05-19', 23, 19, 7, 5, 1),
+(21, '2020-10-15', '2022-00-15', 79, 18, 5, 5, 1),
+(22, '2019-12-12', '2024-01-12', 62, 22, 12, 2, 1),
+(23, '2020-03-21', '2027-04-21', 32, 21, 13, 3, 1),
+(24, '2021-06-23', '2023-05-23', 36, 21, 10, 1, 1),
+(26, '2021-03-08', '2022-08-08', 75, 22, 1, 4, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `Usługi`
+--
+
+CREATE TABLE `Usługi` (
+  `ID_Uslugi` int(11) NOT NULL,
+  `Data_uslugi` date DEFAULT NULL,
+  `ID_Konia` int(11) DEFAULT NULL,
+  `ID_Klienta` int(11) DEFAULT NULL,
+  `ID_Pracownika` int(11) DEFAULT NULL,
+  `ID_Platnosci` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Zrzut danych tabeli `Usługi`
+--
+
+INSERT INTO `Usługi` (`ID_Uslugi`, `Data_uslugi`, `ID_Konia`, `ID_Klienta`, `ID_Pracownika`, `ID_Platnosci`) VALUES
+(1, '2020-01-24', 1, 2, 1, 3),
+(2, '2020-01-25', 5, 1, 2, 5),
+(3, '2019-04-13', 3, 13, 3, 8),
+(4, '2020-06-23', 6, 4, 1, 3),
+(5, '2020-02-18', 2, 2, 5, 5),
+(6, '2021-11-04', 8, 3, 3, 3),
+(7, '2020-10-09', 8, 9, 4, 6),
+(8, '2019-03-11', 14, 7, 5, 8),
+(9, '2020-04-14', 15, 4, 1, 4),
+(10, '2019-05-18', 12, 11, 2, 2),
+(11, '2020-01-21', 10, 5, 3, 7),
+(12, '2021-04-19', 12, 7, 1, 6),
+(13, '2019-09-01', 7, 1, 2, 3),
+(14, '2019-11-13', 4, 12, 2, 4),
+(15, '2020-04-14', 1, 9, 4, 2),
+(16, '2019-02-18', 8, 11, 2, 3),
+(17, '2019-01-21', 11, 10, 3, 2),
+(18, '2021-11-19', 9, 1, 2, 7),
+(19, '2020-08-01', 7, 13, 2, 8);
+
+--
+-- Indeksy dla zrzutów tabel
+--
+
+--
+-- Indexes for table `Klienci`
+--
+ALTER TABLE `Klienci`
+  ADD PRIMARY KEY (`ID_Klienta`);
+
+--
+-- Indexes for table `Konie`
+--
+ALTER TABLE `Konie`
+  ADD PRIMARY KEY (`ID_Konia`);
+
+--
+-- Indexes for table `Pracownicy`
+--
+ALTER TABLE `Pracownicy`
+  ADD PRIMARY KEY (`ID_Pracownika`);
+
+--
+-- Indexes for table `Płatności`
+--
+ALTER TABLE `Płatności`
+  ADD PRIMARY KEY (`ID_Platnosci`);
+
+--
+-- Indexes for table `Rezerwacje`
+--
+ALTER TABLE `Rezerwacje`
+  ADD PRIMARY KEY (`ID_Rezerwacji`),
+  ADD KEY `Rez_Kli` (`ID_Klienta`),
+  ADD KEY `Rez_Konie` (`ID_Konia`),
+  ADD KEY `Rez_Praco` (`ID_Pracownika`),
+  ADD KEY `Rez_Plat` (`ID_Platnosci`);
+
+--
+-- Indexes for table `Usługi`
+--
+ALTER TABLE `Usługi`
+  ADD PRIMARY KEY (`ID_Uslugi`),
+  ADD KEY `Usl_Kli` (`ID_Klienta`),
+  ADD KEY `Usl_Konie` (`ID_Konia`),
+  ADD KEY `Usl_Praco` (`ID_Pracownika`),
+  ADD KEY `Usl_Plat` (`ID_Platnosci`);
+
+--
+-- Ograniczenia dla zrzutów tabel
+--
+
+--
+-- Ograniczenia dla tabeli `Rezerwacje`
+--
+ALTER TABLE `Rezerwacje`
+  ADD CONSTRAINT `Rez_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `Klienci` (`ID_Klienta`),
+  ADD CONSTRAINT `Rez_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `Konie` (`ID_Konia`),
+  ADD CONSTRAINT `Rez_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `Płatności` (`ID_Platnosci`),
+  ADD CONSTRAINT `Rez_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `Pracownicy` (`ID_Pracownika`);
+
+--
+-- Ograniczenia dla tabeli `Usługi`
+--
+ALTER TABLE `Usługi`
+  ADD CONSTRAINT `Usl_Kli` FOREIGN KEY (`ID_Klienta`) REFERENCES `Klienci` (`ID_Klienta`),
+  ADD CONSTRAINT `Usl_Konie` FOREIGN KEY (`ID_Konia`) REFERENCES `Konie` (`ID_Konia`),
+  ADD CONSTRAINT `Usl_Plat` FOREIGN KEY (`ID_Platnosci`) REFERENCES `Płatności` (`ID_Platnosci`),
+  ADD CONSTRAINT `Usl_Praco` FOREIGN KEY (`ID_Pracownika`) REFERENCES `Pracownicy` (`ID_Pracownika`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
